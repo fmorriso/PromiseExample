@@ -1,0 +1,99 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title></title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="manifest" href="site.webmanifest">
+	<link rel="apple-touch-icon" href="icon.png">
+	<!-- Place favicon.ico in the root directory -->
+
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<!--[if lte IE 9]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade
+	your browser</a> to improve your experience and security.</p>
+<![endif]-->
+
+<!-- Add your site or application content here -->
+<p>Hello world! This is HTML5 Boilerplate.</p>
+
+<button onclick="buttonClickedHandler()">Test</button>
+<div id="dynamicContent">Until promise finishes</div>
+<script src="js/vendor/modernizr-3.5.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+<script>
+/* getSandbox.com*/
+/* http://dark-sun-2586.getsandbox.com/users */
+    var dynamicElement;
+    var processed = 0;
+    //var url = 'http://dark-sun-2586.getsandbox.com/hello';
+	var url = 'https://jsonplaceholder.typicode.com/users';
+	var request;
+	var users = [];
+
+    $(function () {
+        console.log('document ready');
+        dynamicElement = $('#dynamicContent');
+        if (dynamicElement === null || typeof dynamicElement === 'undefined' || dynamicElement.length === 0) {
+            console.error('Could not find dynamic element - scripts will probably not work');
+            return;
+        }
+        $(dynamicElement).hide();
+
+        request = new XMLHttpRequest();
+        promise = new Promise((resolve, reject) => {
+
+            request.open('GET', url);
+            request.onload = () => {
+                if (request.status === 200) {
+                    resolve(request.response); // we got data here, so resolve the Promise
+                } else {
+                    reject(Error(request.statusText)); // status is not 200 OK, so reject
+                }
+            };
+
+            request.onerror = () => {
+                reject(Error('Error fetching data.')); // error occurred, reject the  Promise
+            };
+        });
+    });
+
+    function buttonClickedHandler() {
+
+        request.send(); // send the HTTP request
+        console.log('Asynchronous request made.');
+
+        promise.then((data) => {
+            console.log('Got data! Promise fulfilled.');
+			users = JSON.parse(data);
+			var dynamicHtml = '<ul>';
+			for(var i = 0; i < users.length; i++){
+			    dynamicHtml += '<li>';
+			    dynamicHtml += users[i].name;
+			    dynamicHtml += '</li>';
+			}
+			dynamicHtml += '</ul>';
+			$(dynamicElement).html(dynamicHtml).show();
+
+        }, (error) => {
+            console.log('Promise rejected.');
+            console.log(error.message);
+        });
+
+    }
+
+
+</script>
+
+</body>
+</html>
