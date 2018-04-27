@@ -7,3 +7,5 @@ Example of a simple Promise that uses a public mock REST API
 1. If using WebStorm, open the index.html page and click one of the built-in browser icons in the upper-right corner to launch it.
 
 1. Click the Test button.
+
+1. A list of user names should appear on the page as an unordered list.
